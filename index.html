@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title>Visualization</title>
+			<!-- 1. Add these JavaScript inclusions in the head of your page -->
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/easySlider.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript" src="js/modules/exporting.js"></script>
+<link href="css/styles.css" rel="stylesheet" type="text/css" media="screen">
+	
+</head>
+
+<body onload = "loadXML()">
+	
+	<div id="outBox">	
+		<div id="wrapper">
+			<div id="censusLogo">
+			</div>
+		
+			<div id="topnav">
+				<ul>
+					<li id="currentpage"><a href="index.html">HOME</a></li>
+					<li><a href="comparison.html">COMPARE STATES</a></li>
+					<li><a href="demo.html">DEMO</a></li>
+					<li><a href="about.html">ABOUT US</a></li>
+				</ul>
+			</div> <!-- topnav ends-->
+			
+			<!-- ammap script-->
+  			<script type="text/javascript" src="ammap/swfobject.js"></script>
+  			<div id="mapWrapper">
+				<div id="categories">
+				
+					<table border="2">
+					<tr class="download">
+						<th><a href="FinalCensusData.xml" target=_blank>Categories: Download Data</a></th>
+					</tr>
+					<tr class="odd">
+						<td>Population Size Total</td>
+					</tr>
+					<tr>
+						<td>Population Size Urban</td>
+					</tr>
+					<tr class="odd">
+						<td>Population Size Rural</td>
+					</tr>
+					<tr>
+						<td>Population Size 0-6 yr</td>
+					</tr>
+					<tr class="odd">
+						<td>Population Size 0-6 yr Rural</td>
+					</tr>
+					<tr>
+						<td>Population Size 0-6 yr Urban</td>
+					</tr>
+					<tr class="odd">
+						<td>Literacy Rate</td>
+					</tr>
+					<tr>
+						<td>Sex Ratio</td>
+					</tr>
+					<tr class="odd">
+						<td>Sex Ratio 0-6 years</td>
+					</tr>
+					
+				</table>
+				
+				</div>
+			    <div id="flashcontent"><strong>You need to upgrade your Flash Player.</strong></div>
+				<div id="summary">
+				
+					<table id="summaryTable">
+					<col width="80%" />
+					<col width="20%" />
+						<tr>
+							<th>INDIA</th>
+							<th>2011</th>
+						</tr>							
+						<tr class="odd">
+							<td>Population Size Total (Million)</td>
+							<td>1210</td>
+						</tr>
+						<tr>
+							<td>Population Size Rural (Million)</td>
+							<td>833</td>
+						</tr>
+						<tr class="odd">
+							<td>Population Size Urban (Million)</td>
+							<td>377</td>
+						</tr>
+						<tr>
+							<td>Population Size 0-6 yr (Million)</td>
+							<td>158</td>
+						</tr>
+						<tr class="odd">
+							<td>Population Size 0-6 yr Rural (Million)</td>
+							<td>117</td>
+						</tr>
+						<tr>
+							<td>Population Size 0-6 yr Urban (Million)</td>
+							<td>41</td>
+						</tr>
+						<tr class="odd">
+							<td>Literacy Rate (%)</td>
+							<td>74.4</td>
+						</tr>
+						<tr>
+							<td>Sex Ratio (Females per 1000 males)</td>
+							<td>940</td>
+						</tr>
+						<tr class="odd">
+							<td>Sex Ratio 0-6 years</td>
+							<td>914</td>
+						</tr>						
+					</table>					
+				</div>
+			</div>
+			
+			<script type="text/javascript">
+
+						// <![CDATA[		
+			var so = new SWFObject("ammap/ammap.swf", "ammap", "100%", "400", "8", "#ffffff");
+  	 	 	so.addVariable("path", "ammap/");
+			so.addVariable("data_file", escape("ammap/ammap_data.xml"));
+  		  	so.addVariable("settings_file", escape("ammap/ammap_settings.xml"));		
+			so.addVariable("preloader_color", "#999999");
+			so.write("flashcontent");
+			// ]]>
+			
+			//var title="Maharashtra";
+			
+			function amRegisterClick(map_id,object_id,title,value)
+			{
+				fillSummaryTable(title);
+				drawChart(title);	
+			}
+			var x;
+			function loadXML()
+			{
+		// --------------------BEGIN Logic for parsing XML file-------------------
+			if (window.XMLHttpRequest)
+			{// code for IE7+, Firefox, Chrome, Opera, Safari
+			  	xmlhttp=new XMLHttpRequest();
+			}
+			else
+			{// code for IE6, IE5
+			  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.open("GET","FinalCensusData.xml",false);
+			xmlhttp.send();
+			xmlDoc=xmlhttp.responseXML; 
+			x=xmlDoc.getElementsByTagName("Area");
+			//alert(x[0].getElementsByTagName("AreaName")[0].childNodes[0].nodeValue);
+			var y=xmlDoc.getElementsByTagName("AreaName");
+			var z=xmlDoc.getElementsByTagName("AreaName");
+			// --------------------END Logic for parsing XML file -------------------
+			drawChart("India");
+		}
+			
+			
+			var options = {
+
+				chart: {
+
+					renderTo: 'container1',
+					borderColor: '#EBBA95',
+					borderWidth: 2,
+					type: 'column',
+					plotBorderWidth: 1
+
+				},
+
+				colors: ['#842A05'],
+				
+				title: {
+
+					text: 'Sex Ratio'
+
+				},
+				subtitle: {
+					text: 'India'
+				},
+				
+				tooltip: {
+					formatter: function() {
+						return this.x +
+							'</b> : <b>'+ this.y +'</b>';
+					}
+				},
+
+				xAxis: {
+
+					categories: []
+
+				},
+
+				yAxis: {
+					endOnTick: false,
+					title: {
+						text: 'Units'
+					},
+					minorGridLineColor: '#E0E0E0',
+					minorTickInterval: 'auto'
+
+				},
+				
+				plotOptions: {
+					series: {
+								colorByPoint: false,
+								dataLabels: {
+									align: 'center',
+									enabled: false,
+									style: {
+										fontWeight:'bold'
+									},
+									rotation: 270,
+									color: '#ffffff',
+									x: 3,
+									y: 37
+								}
+							}
+				},
+				
+
+				series: []
+
+			};
+
+			function fillSummaryTable(title)
+			{
+				for (i=0;i<x.length;i++)
+				{ 
+				 	if(x[i].getElementsByTagName("AreaName")[0].childNodes[0].nodeValue == title)
+				 	{
+						
+						var tab_row=document.getElementById('summaryTable').rows[0].cells;
+						tab_row[0].innerHTML = title;
+					
+						var tab_row=document.getElementById('summaryTable').rows[1].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSizeTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+
+						var tab_row=document.getElementById('summaryTable').rows[2].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSizeRuralTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+						
+						var tab_row=document.getElementById('summaryTable').rows[3].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSizeUrbanTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+						
+						var tab_row=document.getElementById('summaryTable').rows[4].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSize0-6yrsTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+						
+						var tab_row=document.getElementById('summaryTable').rows[5].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSizeRural0-6yrsTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+						
+						var tab_row=document.getElementById('summaryTable').rows[6].cells;
+						tab_row[1].innerHTML = 
+							parseFloat((x[i].getElementsByTagName("PopulationSizeUrban0-6yrsTotal2011")[0].childNodes[0].nodeValue)/1000000).toFixed(3);
+						
+						var tab_row=document.getElementById('summaryTable').rows[7].cells;
+						tab_row[1].innerHTML = x[i].getElementsByTagName("LiteracyRateTotal2011")[0].childNodes[0].nodeValue;
+						
+						var tab_row=document.getElementById('summaryTable').rows[8].cells;
+						tab_row[1].innerHTML = x[i].getElementsByTagName("SexRatioTotal2011")[0].childNodes[0].nodeValue;
+						
+						var tab_row=document.getElementById('summaryTable').rows[9].cells;
+						tab_row[1].innerHTML = x[i].getElementsByTagName("SexRatio0-6yrsTotal2011")[0].childNodes[0].nodeValue;
+					}
+				}
+			}
+			
+			function drawChart(title)
+			{
+				//alert(title);
+				for (i=0;i<x.length;i++)
+				{ 
+//					alert(x[i].getElementsByTagName("AreaName")[0].childNodes[0].nodeValue + title);
+				 	if(x[i].getElementsByTagName("AreaName")[0].childNodes[0].nodeValue == title)
+				 	{
+					//	alert(title);
+					/*	var PST_2001 = "PopulationSizeTotal2001";
+						var PST_2011 = "PopulationSizeTotal2011";
+						var PSM_2001 = "PopulationSizeMales2001";
+						var PSM_2011 = "PopulationSizeMales2001";
+						var PSF_2001 = "PopulationSizeFemales2001";
+						var PSF_2011 = "PopulationSizeFemales2011";
+						var SRT_2001 = "SexRatioTotal2001";
+						var SRT_2011 = "SexRatioTotal2011";
+						var SRR_2001 = "SexRatioRural2001";
+						var SRR_2011 = "SexRatioRural2011";
+						var SRU_2001 = "SexRatioUrban2001";
+						var SRU_2011 = "SexRatioUrban2011";
+						*/
+				//		var cat = new Array("PopulationSizeTotal","PopulationSizeMales","PopulationSizeFemales","SexRatioTotal","SexRatioRural","SexRatioUrban");
+				var cat = new Array("PopulationSize","PopulationSizeRural","PopulationSizeUrban","PopulationSize0-6yrs","PopulationSizeRural0-6yrs","PopulationSizeUrban0-6yrs","LiteracyRate","SexRatio","SexRatio0-6yrs");
+						
+						/*options.xAxis.categories.push("SexRatioTotal2001");
+						options.xAxis.categories.push("SexRatioTotal2011");
+						*/
+						for(var k =0; k< cat.length;k++)
+						{
+							/*
+							var cat2001 = cat[k]+2001;
+							var cat2011 = cat[k]+2011;
+							*/
+							var gender = new Array("Total","Males", "Females");
+							var tru = new Array("Total","Rural","Urban");
+							options.xAxis.categories.push(2001);
+							options.xAxis.categories.push(2011);
+														
+							for(var p = 0; p<3; p++)
+							{
+								var tail = gender[p];
+								if(cat[k].charAt(0)=="S" )
+								{
+									tail = tru[p];
+								}
+								var cat2001 = cat[k]+tail+2001;
+								var cat2011 = cat[k]+tail+2011;
+								
+								var seriesOptions = {
+
+								name: title,
+
+								data: [],
+								
+								 pointWidth: 18
+
+								};
+								//alert(x[i].getElementsByTagName("PopulationSizeTotal2001")[0].childNodes[0].nodeValue);
+								//alert(cat2001);
+								var v1 = x[i].getElementsByTagName(cat2001)[0].childNodes[0].nodeValue;
+								var v2 = x[i].getElementsByTagName(cat2011)[0].childNodes[0].nodeValue;
+								seriesOptions.name = tail;
+								seriesOptions.data.push( parseInt(v1) );
+								seriesOptions.data.push( parseInt(v2) );
+								options.series.push(seriesOptions);
+								var j = k+1;
+								options.chart.renderTo = "container"+j;
+								options.yAxis.title.text = "In Number";
+								options.chart.type = "column";
+								options.colors=new Array('#F67901', '#058DC7', '#4C9305');
+								options.plotOptions.series.dataLabels.enabled=false;
+								if(cat[k].charAt(0)=="S")
+								{
+									//alert(seriesOptions.name);
+									options.colors=new Array('#AA4643', '#4572A7', '#89A54E');
+									options.yAxis.title.text = "Females per 1000 males.";
+									options.yAxis.min=800;
+									options.plotOptions.series.dataLabels.enabled=true;
+								}
+								if(cat[k].charAt(0)=="L")
+								{
+									options.colors=new Array('#80699B', '#058DC7', '#4C9305');
+									options.plotOptions.series.dataLabels.enabled=true;
+								}
+								options.title.text = cat[k];
+								options.subtitle.text = title;
+							}
+							var chart = new Highcharts.Chart(options);
+						//	alert(options.chart.renderTo);
+							for(var q=0;q<3;q++)
+							{
+								options.series.pop();
+							}
+							options.xAxis.categories.pop();
+							options.xAxis.categories.pop();
+							options.yAxis.min = 0;
+						
+						
+						}
+						
+						break;
+					//	alert(options);
+				 	//	alert("Call API to draw charts for state:"+title+
+				 	//	"with population:"+x[i].getElementsByTagName("PopulationDensity2001")[0].childNodes[0].nodeValue);
+				 	}
+					
+						
+			 	}
+			
+			} 
+						
+			/*function parseXML(xml){
+			
+ 				$(xml).find("Area").each(function (){
+ 					if($(this).find("AreaName").text() == "Assam"){
+ 					alert("found Assam");
+ 					}
+    				//var val1= $(this).find("Assam").text();
+    				//var val2= $(this).find("PopulationDensity2011").text();
+    				//alert(val1+val2);
+    			});
+			}*/
+			
+			</script>
+			<!-- end of ammap script -->
+	
+			<div id="charts"> 
+	
+				<div id="container1" class="graph" style="float:left" ></div>
+				<div id="container2" class="graph" style="float:left"></div>
+				<div id="container3" class="graph" style="float:right"></div>
+
+			</div>
+			<div id="charts"> 
+				<div id="container4" class="graph" style="float:left"></div>
+				<div id="container5" class="graph" style="float:left"></div>
+				<div id="container6" class="graph" style="float:left"></div>
+			</div>
+			<div id="charts"> 
+				<div id="container7" class="graph" style="float:left"></div>
+				<div id="container8" class="graph" style="float:left"></div>
+				<div id="container9" class="graph" style="float:left"></div>
+			</div>
+			<div id="footer">
+				<p>North Carloina State University | Web Visualization project -Dec 2011 | Guidance of Prof. Ben Watson.</p>
+			</div>
+
+			
+		</div> <!-- Wrapper Ends-->
+	</div> <!-- outBox Ends-->
+
+</body>
+
+</html>
