@@ -1,0 +1,33 @@
+﻿<html>
+<body>
+
+<script type="text/javascript">
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+alert("inside chrome");
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+alert("inside IE");
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.open("GET","wordlist.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+alert("xmldoc="+xmlDoc);
+document.write("test html text");
+document.write("<ul>");
+var x=xmlDoc.getElementsByTagName("word");
+alert("x="+x.length);
+for (i=0;i<x.length;i++)
+  { 
+  document.write("<li>");
+  document.write(x[i].childNodes[0].nodeValue);
+  document.write("</li>");
+  }
+document.write("</ul>");
+</script>
+
+</body>
+</html>
